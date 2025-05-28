@@ -26,7 +26,7 @@ interface CategoryWithProducts extends Category {
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 product-grid">
           <div *ngFor="let product of categoryGroup.products" class="col">
             <div class="card h-100 product-card">
-             <img *ngIf="product.imagemUrl" [src]="product.imagemUrl" 
+             <img *ngIf="product.imagemUrl" [src]="'http://localhost:3000' + product.imagemUrl" 
        class="card-img-top" alt="{{ product.nome }}">
               <!-- Adicionar imagem do produto se disponível -->
               <div class="card-body">
@@ -198,18 +198,18 @@ export class PrintIndexComponent implements OnInit {
     }).pipe(
       map(({ products, categories }) => {
         const productMap = new Map<number, Product[]>();
-        products.forEach(product => {
+        products.forEach((product: Product) => {
           const existing = productMap.get(product.categoriaId) || [];
           existing.push(product);
           productMap.set(product.categoriaId, existing);
         });
 
         return categories
-          .map(category => ({
+          .map((category: { id: number; }) => ({
             ...category,
             products: productMap.get(category.id) || []
           }))
-          .filter(category => category.products.length > 0);
+          .filter((category: { products: string | any[]; }) => category.products.length > 0);
       })
     );
   }

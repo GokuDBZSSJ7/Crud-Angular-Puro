@@ -35,7 +35,7 @@ import { Observable, map, switchMap, forkJoin } from 'rxjs';
           <td>{{ product.preco | currency:'BRL' }}</td>
           <td>{{ product.descricao }}</td>
           <td>{{ product.categoria?.nome || 'N/A' }}</td> <!-- Exibe nome da categoria -->
-          <td><img *ngIf="product.imagemUrl" [src]="product.imagemUrl" 
+          <td><img *ngIf="product.imagemUrl" [src]="'http://localhost:3000' + product.imagemUrl" 
        alt="{{ product.nome }}" style="max-width: 80px"></td>
           <td>
             <a [routerLink]="['edit', product.id]" class="btn btn-sm btn-warning me-2">Editar</a>
@@ -60,30 +60,14 @@ export class ProductListComponent implements OnInit {
   }
 
   loadProductsWithCategory(): void {
-    this.productsWithCategory$ = forkJoin({
-      products: this.productService.getProducts(),
-      categories: this.categoryService.getCategories()
-    }).pipe(
-      map(({ products, categories }) => {
-        const categoryMap = new Map<number, Category>(categories.map(cat => [cat.id, cat]));
-        console.log(products);
-        
-        return products.map(product => ({
-          ...product,
-          categoria: categoryMap.get(product.categoriaId)
-        }));
-      })
-    );
-
-    
-    
+    this.productsWithCategory$ = this.productService.getProducts()
   }
 
   deleteProduct(id: number): void {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       this.productService.deleteProduct(id).subscribe(success => {
         if (success) {
-          this.loadProductsWithCategory(); // Recarrega a lista após exclusão
+          this.loadProductsWithCategory();
         } else {
           alert('Erro ao excluir produto.');
         }

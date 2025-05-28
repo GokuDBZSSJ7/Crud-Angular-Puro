@@ -4,9 +4,9 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from '../../../category/services/category.service';
-import { Product } from '../../models/product';
 import { Category } from '../../../category/models/category';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-product-form',
@@ -14,7 +14,7 @@ import { Observable, of } from 'rxjs';
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   template: `
     <h2>{{ isEditMode ? 'Editar' : 'Adicionar' }} Produto</h2>
-    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
       <div class="mb-3">
         <label for="nome" class="form-label">Nome</label>
@@ -59,11 +59,14 @@ import { Observable, of } from 'rxjs';
       </div>
 
       <div class="mb-3">
-        <label for="imageFile" class="form-label">Imagem do Produto</label>
+  <label for="imageFile" class="form-label">Imagem do Produto</label>
   <input type="file" id="imageFile" class="form-control" 
          accept="image/*" (change)="onFileSelected($event)">
-
-      </div>
+  <div *ngIf="form.get('imagemUrl')?.value" class="mt-2">
+    <img [src]="form.get('imagemUrl')?.value" 
+         alt="Preview" style="max-height: 100px;">
+  </div>
+</div>
 
       <button type="submit" class="btn btn-primary me-2">Salvar</button>
       <a routerLink="/products" class="btn btn-secondary">Cancelar</a>
@@ -72,40 +75,40 @@ import { Observable, of } from 'rxjs';
   styles: []
 })
 export class ProductFormComponent implements OnInit {
-  productForm: FormGroup;
+  form: FormGroup;
   isEditMode = false;
   productId: number | null = null;
   submitted = false;
   categories$: Observable<Category[]> | undefined;
+  selectedFile: File | null = null;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private http: HttpClient
   ) {
-    this.productForm = this.fb.group({
+    this.form = this.fb.group({
       nome: ['', Validators.required],
       preco: [null, [Validators.required, Validators.min(0.01)]],
       descricao: ['', Validators.required],
       categoriaId: [null, Validators.required],
-      imagemUrl: ['']
+      imagem_url: ['']
     });
   }
 
   onFileSelected(event: any): void {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.productForm.patchValue({
-        imagemUrl: e.target?.result as string
-      });
-    };
-    reader.readAsDataURL(file);
+    this.selectedFile = event.target.files[0];
   }
-}
+
+  uploadImage(): Observable<any> {
+    const formData = new FormData();
+    formData.append('image', this.selectedFile as File);
+
+    return this.http.post<any>('http://localhost:3000/api/upload', formData);
+  }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -114,7 +117,12 @@ export class ProductFormComponent implements OnInit {
       this.isEditMode = true;
       this.productService.getProduct(this.productId).subscribe(product => {
         if (product) {
-          this.productForm.patchValue(product);
+          console.log(product);
+          const patchedProduct = {
+            ...product,
+            categoriaId: product.categoria_id
+          };
+          this.form.patchValue(patchedProduct);
         }
       });
     }
@@ -124,29 +132,66 @@ export class ProductFormComponent implements OnInit {
     this.categories$ = this.categoryService.getCategories();
   }
 
-  get f() { return this.productForm.controls; }
+  get f() { return this.form.controls; }
 
   onSubmit(): void {
     this.submitted = true;
 
-    if (this.productForm.invalid) {
+    if (this.form.invalid) {
       return;
     }
 
-    const productData = this.productForm.value;
-    let saveObservable: Observable<Product | undefined>;
+    const productData = this.form.value;
 
-    if (this.isEditMode && this.productId) {
-      saveObservable = this.productService.updateProduct({ ...productData, id: this.productId });
+    if (this.selectedFile) {
+      this.uploadImage().subscribe({
+        next: res => {
+          console.log(res);
+
+          this.form.patchValue({
+            imagem_url: res.imagePath
+          })
+          console.log(this.form.value);
+
+          const productData = this.form.value;
+
+          if (this.isEditMode && this.productId) {
+            const productData = this.form.value;
+            this.productService.updateProduct(productData, this.productId).subscribe({
+              next: res => {
+                console.log("Produto criado com sucesso");
+                this.router.navigate(['/products'])
+              }, error: (err) => console.error("Erro ao salvar produto: ", err)
+            })
+          } else {
+            this.productService.addProduct(productData).subscribe({
+              next: res => {
+                console.log("Produto criado com sucesso");
+                this.router.navigate(['/products'])
+              }, error: (err) => console.error("Erro ao salvar produto: ", err)
+            })
+          }
+        }, error: (err) => {
+          console.error('Erro ao fazer upload da imagem:', err);
+        }
+      })
     } else {
-      const { id, categoria, ...newProductData } = productData;
-      saveObservable = this.productService.addProduct(newProductData);
+      if (this.isEditMode && this.productId) {
+        this.productService.updateProduct(productData, this.productId).subscribe({
+          next: res => {
+            console.log("Produto criado com sucesso");
+            this.router.navigate(['/products'])
+          }, error: (err) => console.error("Erro ao salvar produto: ", err)
+        })
+      } else {
+        this.productService.addProduct(productData).subscribe({
+          next: res => {
+            console.log("Produto criado com sucesso");
+            this.router.navigate(['/products'])
+          }, error: (err) => console.error("Erro ao salvar produto: ", err)
+        })
+      }
     }
-
-    saveObservable.subscribe({
-      next: () => this.router.navigate(['/products']),
-      error: (err) => console.error('Erro ao salvar produto:', err)
-    });
   }
 }
 

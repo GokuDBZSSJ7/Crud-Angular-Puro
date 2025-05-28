@@ -2,64 +2,41 @@ import { Injectable } from '@angular/core';
 import { Observable, of, map } from 'rxjs';
 import { Product } from '../models/product';
 import { CategoryService } from '../../category/services/category.service';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private products: Product[] = [
-    { id: 1, nome: 'Batata Frita com Cheddar', preco: 35.00, descricao: 'Deliciosa batata frita coberta com cheddar.', categoriaId: 1, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/porcoes/batata-frita.png' },
-    { id: 2, nome: 'Calabresa Acebolada', preco: 45.00, descricao: 'Linguiça calabresa acebolada servida com pão, 500 g.', categoriaId: 1, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/porcoes/calabresa.png' },
-    { id: 3, nome: 'Tilápia', preco: 55.00, descricao: 'Filé de tilápia empanado e frito, com molho especial.', categoriaId: 1, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/porcoes/tilapia.png' }, 
-    { id: 4, nome: 'Água 510ml', preco: 5.00, descricao: 'Água mineral natural, 510 ml.', categoriaId: 2, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/bebidas/agua-510ml.png' },
-    { id: 5, nome: 'Água com Gás', preco: 6.00, descricao: 'Água mineral com gás, refrescante', categoriaId: 2, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/bebidas/agua-gas.png' },
-    { id: 6, nome: 'Espeto de Carne', preco: 15.00, descricao: 'Delicioso espeto de carne bovina.', categoriaId: 3, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/espetos/espetinho.png' },
-    { id: 7, nome: 'Coxinha', preco: 8.00, descricao: 'Salgado frito recheado com frango.', categoriaId: 4, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/salgados/coxinha.png' }
-  ];
+  url: string = 'http://localhost:3000/api'
 
   private nextId = 8;
 
-  constructor(private categoryService: CategoryService) { }
+  constructor(private categoryService: CategoryService, private http: HttpClient) { }
 
-  getProducts(): Observable<Product[]> {
-    return of(this.products).pipe(
-      map(products => products.map(product => {
-        return product;
-      }))
-    );
+  getProducts(): Observable<any> {
+    return this.http.get(`${this.url}/products`);
   }
 
-  getProduct(id: number): Observable<Product | undefined> {
-    return of(this.products.find(p => p.id === id));
+  getProduct(id: number): Observable<any> {
+    return this.http.get(`${this.url}/products/${id}`)
   }
 
-  addProduct(product: Omit<Product, 'id' | 'categoria'>): Observable<Product> {
-    const newProduct: Product = { ...product, id: this.nextId++ };
-    this.products.push(newProduct);
-    return of(newProduct);
+  addProduct(data: any): Observable<any> {
+    return this.http.post(`${this.url}/products`, data);
   }
 
-  updateProduct(product: Product): Observable<Product | undefined> {
-    const index = this.products.findIndex(p => p.id === product.id);
-    if (index !== -1) {
-      this.products[index] = { ...this.products[index], ...product }; // Mescla para manter a categoria se não for passada
-      return of(this.products[index]);
-    }
-    return of(undefined);
+  updateProduct(data: any, id: number): Observable<any> {
+    return this.http.put(`${this.url}/products/${id}`, data)
   }
 
-  deleteProduct(id: number): Observable<boolean> {
-    const index = this.products.findIndex(p => p.id === id);
-    if (index !== -1) {
-      this.products.splice(index, 1);
-      return of(true);
-    }
-    return of(false);
+  deleteProduct(id: number): Observable<any> {
+    return this.http.delete(`${this.url}/products/${id}`)
   }
 
-  getProductsByCategory(categoriaId: number): Observable<Product[]> {
-    return of(this.products.filter(p => p.categoriaId === categoriaId));
+  getProductsByCategory(categoriaId: number): Observable<any> {
+    return this.http.get(`${this.url}/productsCategory/${categoriaId}`);
   }
 }
 

@@ -71,15 +71,21 @@ export class CategoryFormComponent implements OnInit {
     let saveObservable: Observable<Category | undefined>;
 
     if (this.isEditMode && this.categoryId) {
-      saveObservable = this.categoryService.updateCategory({ ...categoryData, id: this.categoryId });
+      this.categoryService.updateCategory(categoryData, this.categoryId).subscribe({
+        next: res => {
+          console.log("Categoria atualizada com sucesso!");
+          this.router.navigate(['/categories']);
+        }, error: (err) => console.error('Erro ao salvar categoria:', err)
+      })
     } else {
-      saveObservable = this.categoryService.addCategory(categoryData);
+      this.categoryService.addCategory(categoryData).subscribe({
+        next: res => {
+          console.log("Categoria criada com sucesso!");
+          this.router.navigate(['/categories'])
+        }, error: (err) => console.error('Erro ao salvar categoria:', err)
+      });
     }
 
-    saveObservable.subscribe({
-      next: () => this.router.navigate(['/categories']),
-      error: (err) => console.error('Erro ao salvar categoria:', err)
-    });
   }
 }
 

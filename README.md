@@ -4,11 +4,16 @@ Este é um projeto feito totalmente em angular, no qual simula um crud por meio 
 
 Isso sem contar que é um projeto que utiliza testes automatizado das funcionalidades.
 
+Eu acabei adicionando um backend simples em Node no projeto, já que queria fazer manipulação de imagens
+
 ## 🛠️ Tecnologias Utilizadas
 
 Angular \
 Jest \
-Bootstrap 
+Bootstrap \
+Nodejs \
+Express \
+MySql
 
 ## 🚀 Como Rodar o Projeto
 

@@ -1,59 +1,25 @@
-# CrudApp
+# ☕ Crud-Angular-Puro
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.13.
+Este é um projeto feito totalmente em angular, no qual simula um crud por meio de services, pode criar, editar, visualizar e excluir produtos e categorias para no fim poder visualizar o cardápio completo.
 
-## Development server
+Isso sem contar que é um projeto que utiliza testes automatizado das funcionalidades.
 
-To start a local development server, run:
+## 🛠️ Tecnologias Utilizadas
 
-```bash
-ng serve
-```
+Angular \
+Jest \
+Bootstrap 
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🚀 Como Rodar o Projeto
 
-## Code scaffolding
+1° - `git clone https://github.com/GokuDBZSSJ7/Crud-Angular-Puro.git`
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+2° - `npm install`
 
-```bash
-ng generate component component-name
-```
+3° - `ng serve -o`
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 💻​ Abra o projeto no seu navegador
 
-```bash
-ng generate --help
-```
+Tambem tem como você abrir o projeto no seu computador, o projeto não está responsivo, não é o intuito dele, seu objetivo é apenas mostrar a funcionalidade de crud usando apenas Angular, então teste em um computador
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Link - `crudo-angular.netlify.app`

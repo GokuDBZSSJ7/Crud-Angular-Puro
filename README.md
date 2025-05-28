@@ -1,4 +1,4 @@
-# ☕ Crud-Angular-Puro
+# 💯 Crud-Angular-Puro
 
 Este é um projeto feito totalmente em angular, no qual simula um crud por meio de services, pode criar, editar, visualizar e excluir produtos e categorias para no fim poder visualizar o cardápio completo.
 

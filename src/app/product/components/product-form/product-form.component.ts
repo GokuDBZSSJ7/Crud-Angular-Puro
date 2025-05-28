@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
-import { CategoryService } from '../../../category/services/category.service'; 
+import { CategoryService } from '../../../category/services/category.service';
 import { Product } from '../../models/product';
 import { Category } from '../../../category/models/category';
 import { Observable, of } from 'rxjs';
@@ -58,6 +58,13 @@ import { Observable, of } from 'rxjs';
         </div>
       </div>
 
+      <div class="mb-3">
+        <label for="imageFile" class="form-label">Imagem do Produto</label>
+  <input type="file" id="imageFile" class="form-control" 
+         accept="image/*" (change)="onFileSelected($event)">
+
+      </div>
+
       <button type="submit" class="btn btn-primary me-2">Salvar</button>
       <a routerLink="/products" class="btn btn-secondary">Cancelar</a>
     </form>
@@ -76,15 +83,29 @@ export class ProductFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
-    private categoryService: CategoryService 
+    private categoryService: CategoryService
   ) {
     this.productForm = this.fb.group({
       nome: ['', Validators.required],
       preco: [null, [Validators.required, Validators.min(0.01)]],
       descricao: ['', Validators.required],
-      categoriaId: [null, Validators.required]
+      categoriaId: [null, Validators.required],
+      imagemUrl: ['']
     });
   }
+
+  onFileSelected(event: any): void {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.productForm.patchValue({
+        imagemUrl: e.target?.result as string
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+}
 
   ngOnInit(): void {
     this.loadCategories();
@@ -123,7 +144,7 @@ export class ProductFormComponent implements OnInit {
     }
 
     saveObservable.subscribe({
-      next: () => this.router.navigate(['/products']), 
+      next: () => this.router.navigate(['/products']),
       error: (err) => console.error('Erro ao salvar produto:', err)
     });
   }

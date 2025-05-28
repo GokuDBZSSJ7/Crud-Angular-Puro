@@ -9,13 +9,13 @@ import { CategoryService } from '../../category/services/category.service';
 export class ProductService {
 
   private products: Product[] = [
-    { id: 1, nome: 'Batata Frita com Cheddar', preco: 35.00, descricao: 'Deliciosa batata frita coberta com cheddar.', categoriaId: 1 },
-    { id: 2, nome: 'Calabresa Acebolada', preco: 45.00, descricao: 'Linguiça calabresa acebolada servida com pão, 500 g.', categoriaId: 1 },
-    { id: 3, nome: 'Tilápia', preco: 55.00, descricao: 'Filé de tilápia empanado e frito, com molho especial.', categoriaId: 1 }, // Assumindo Porções como Categoria 1
-    { id: 4, nome: 'Água 510ml', preco: 5.00, descricao: 'Água mineral natural, 510 ml.', categoriaId: 2 }, // Assumindo Bebidas como Categoria 2
-    { id: 5, nome: 'Água com Gás', preco: 6.00, descricao: 'Água mineral com gás, refrescante', categoriaId: 2 },
-    { id: 6, nome: 'Espeto de Carne', preco: 15.00, descricao: 'Delicioso espeto de carne bovina.', categoriaId: 3 }, // Assumindo Espetos como Categoria 3
-    { id: 7, nome: 'Coxinha', preco: 8.00, descricao: 'Salgado frito recheado com frango.', categoriaId: 4 } // Assumindo Salgados como Categoria 4
+    { id: 1, nome: 'Batata Frita com Cheddar', preco: 35.00, descricao: 'Deliciosa batata frita coberta com cheddar.', categoriaId: 1, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/porcoes/batata-frita.png' },
+    { id: 2, nome: 'Calabresa Acebolada', preco: 45.00, descricao: 'Linguiça calabresa acebolada servida com pão, 500 g.', categoriaId: 1, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/porcoes/calabresa.png' },
+    { id: 3, nome: 'Tilápia', preco: 55.00, descricao: 'Filé de tilápia empanado e frito, com molho especial.', categoriaId: 1, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/porcoes/tilapia.png' }, 
+    { id: 4, nome: 'Água 510ml', preco: 5.00, descricao: 'Água mineral natural, 510 ml.', categoriaId: 2, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/bebidas/agua-510ml.png' },
+    { id: 5, nome: 'Água com Gás', preco: 6.00, descricao: 'Água mineral com gás, refrescante', categoriaId: 2, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/bebidas/agua-gas.png' },
+    { id: 6, nome: 'Espeto de Carne', preco: 15.00, descricao: 'Delicioso espeto de carne bovina.', categoriaId: 3, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/espetos/espetinho.png' },
+    { id: 7, nome: 'Coxinha', preco: 8.00, descricao: 'Salgado frito recheado com frango.', categoriaId: 4, imagemUrl: 'https://espacocarioca.digiproltda.com.br/img/salgados/coxinha.png' }
   ];
 
   private nextId = 8;

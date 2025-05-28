@@ -23,6 +23,7 @@ import { Observable, map, switchMap, forkJoin } from 'rxjs';
           <th>Preço</th>
           <th>Descrição</th>
           <th>Categoria</th>
+          <th>Imagem</th>
           <th>Ações</th>
         </tr>
       </thead>
@@ -34,6 +35,8 @@ import { Observable, map, switchMap, forkJoin } from 'rxjs';
           <td>{{ product.preco | currency:'BRL' }}</td>
           <td>{{ product.descricao }}</td>
           <td>{{ product.categoria?.nome || 'N/A' }}</td> <!-- Exibe nome da categoria -->
+          <td><img *ngIf="product.imagemUrl" [src]="product.imagemUrl" 
+       alt="{{ product.nome }}" style="max-width: 80px"></td>
           <td>
             <a [routerLink]="['edit', product.id]" class="btn btn-sm btn-warning me-2">Editar</a>
             <button (click)="deleteProduct(product.id)" class="btn btn-sm btn-danger">Excluir</button>

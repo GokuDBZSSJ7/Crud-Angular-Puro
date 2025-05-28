@@ -26,6 +26,8 @@ interface CategoryWithProducts extends Category {
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 product-grid">
           <div *ngFor="let product of categoryGroup.products" class="col">
             <div class="card h-100 product-card">
+             <img *ngIf="product.imagemUrl" [src]="product.imagemUrl" 
+       class="card-img-top" alt="{{ product.nome }}">
               <!-- Adicionar imagem do produto se disponível -->
               <div class="card-body">
                 <h5 class="card-title">{{ product.nome }}</h5>

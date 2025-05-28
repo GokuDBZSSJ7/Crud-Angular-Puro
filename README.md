@@ -22,4 +22,4 @@ Bootstrap
 
 Tambem tem como você abrir o projeto no seu computador, o projeto não está responsivo, não é o intuito dele, seu objetivo é apenas mostrar a funcionalidade de crud usando apenas Angular, então teste em um computador
 
-Link - `crudo-angular.netlify.app`
+Link - `crud-angular-puro.netlify.app`
